@@ -1,9 +1,9 @@
 ﻿<script>
     document.addEventListener('DOMContentLoaded', function() {
-        fn_loading('700');
+        fn_loading('700', 12);
     });
 
-    function fn_loading(width) {
+    function fn_loading(width, count) {
         var loadingCanvas = document.querySelector(".loadingCanvas");
         var ctx = loadingCanvas.getContext('2d');
 
@@ -18,9 +18,9 @@
             ctx.clearRect(0, 0, width, width);
 
             //drawBack();
-            drawloading(deg);
+            drawloading(deg, count);
 
-            deg += 30;
+            deg += 360 / count;
             setTimeout(drawCtx, 100);
         };
 
@@ -50,19 +50,21 @@
             };
         };*/
 
-        function drawloading(deg) {
-            colorList = ['#8258FA', '#9F81F7', '#BCA9F5', '#D8CEF6', '#E6E0F8', '#F2EFFB', '#F2EFFB', '#F2EFFB', '#F2EFFB', '#F2EFFB', '#F2EFFB', '#F2EFFB'];
+        function drawloading(deg, count) {
+            color = [130, 88, 250];
 
-            colorList.forEach(function (color, index) {
-                deg -= 30;
+            for (var i = 0; i < count; i++) {
+                deg -= 360 / count;
                 var x = ((width * 0.8) / 2) * Math.cos(deg * Math.PI / 180);
                 var y = ((width * 0.8) / 2) * Math.sin(deg * Math.PI / 180);
 
                 ctx.beginPath();
-                ctx.arc(x + width / 2, y + width / 2, width / (10 + index), 0, Math.PI * 2);
-                ctx.fillStyle = color;
+                ctx.arc(x + width / 2, y + width / 2, width / (10 + i) * 12 / count, 0, Math.PI * 2);
+                ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
                 ctx.fill();
-            });
+
+                color = color.map(item => item + 100 / count);
+            };
         };
     };
 </script>
