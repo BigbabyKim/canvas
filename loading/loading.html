@@ -1,0 +1,73 @@
+﻿<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fn_loading('700');
+    });
+
+    function fn_loading(width) {
+        var loadingCanvas = document.querySelector(".loadingCanvas");
+        var ctx = loadingCanvas.getContext('2d');
+
+        loadingCanvas.width = width;
+        loadingCanvas.height = width;
+
+        var deg = 0;
+
+        drawCtx();
+
+        function drawCtx() {
+            ctx.clearRect(0, 0, width, width);
+
+            //drawBack();
+            drawloading(deg);
+
+            deg += 30;
+            setTimeout(drawCtx, 100);
+        };
+
+        /*function drawBack() {
+            var deg1 = 0;
+
+            Object.assign(ctx, {
+                shadowBlur: 0,
+                shadowOffsetX: 0,
+                shadowOffsetY: 0,
+            });
+
+            ctx.beginPath();
+            ctx.arc(width / 2, width / 2, width, 0, Math.PI * 2);
+            ctx.fillStyle = '#fff';
+            ctx.fill();
+
+            for (let i = 0; i < 12; i++) {
+                deg1 += 30;
+                var x = ((width * 0.8) / 2) * Math.cos(deg1 * Math.PI / 180);
+                var y = ((width * 0.8) / 2) * Math.sin(deg1 * Math.PI / 180);
+
+                ctx.beginPath();
+                ctx.arc(x + width / 2, y + width / 2, width / 10, 0, Math.PI * 2);
+                ctx.fillStyle = '#F2EFFB';
+                ctx.fill();
+            };
+        };*/
+
+        function drawloading(deg) {
+            colorList = ['#8258FA', '#9F81F7', '#BCA9F5', '#D8CEF6', '#E6E0F8', '#F2EFFB', '#F2EFFB', '#F2EFFB', '#F2EFFB', '#F2EFFB', '#F2EFFB', '#F2EFFB'];
+
+            colorList.forEach(function (color, index) {
+                deg -= 30;
+                var x = ((width * 0.8) / 2) * Math.cos(deg * Math.PI / 180);
+                var y = ((width * 0.8) / 2) * Math.sin(deg * Math.PI / 180);
+
+                ctx.beginPath();
+                ctx.arc(x + width / 2, y + width / 2, width / (10 + index), 0, Math.PI * 2);
+                ctx.fillStyle = color;
+                ctx.fill();
+            });
+        };
+    };
+</script>
+
+
+<body>
+    <canvas class="loadingCanvas"></canvas>
+</body>
