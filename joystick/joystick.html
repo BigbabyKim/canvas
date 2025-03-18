@@ -1,11 +1,17 @@
-﻿<!DOCTYPE html>
+﻿<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        fn_joyStick('700'); // 길이 설정
+    });
 
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="utf-8" />
-    <title></title>
-</head>
+    function fn_joiStick() {
+        var joyStickCanvas = document.querySelector(".joyStickCanvas");
+        var ctx = joyStickCanvas.getContext('2d');
+
+        joyStickCanvas.width = width;
+        joyStickCanvas.height = width;
+    };
+</script>
+
 <body>
-
+    <canvas class="joyStickCanvas"></canvas>
 </body>
-</html>
