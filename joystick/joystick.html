@@ -1,17 +1,122 @@
-﻿<script>
+﻿<style>
+    .joyStickCanvas:hover{
+        cursor: pointer;
+    }
+</style>
+
+<script >
+    var width = '700';
     document.addEventListener('DOMContentLoaded', function () {
-        fn_joyStick('700'); // 길이 설정
+        var isDrawing = false;
+
+
+        fn_joyStick(width); // 길이 설정
+
+        document.addEventListener('mousedown', function (event) {
+            var inputX = event.offsetX;
+            var inputY = event.offsetY;
+            var deg = Math.atan2(inputY - width / 2, inputY - width / 2) / Math.PI * 180;
+            var x = (width / 2.8) * Math.cos(deg * Math.PI / 180);
+            var y = (width / 2.8) * Math.sin(deg * Math.PI / 180);
+
+            isDrawing = true;
+
+            if (Math.sqrt((inputX - width / 2) ** 2 + (inputY - width / 2) ** 2) > width / 1.9) {
+                drawMove(x + width / 2, y + width / 2);
+            } else {
+                drawMove(event.offsetX, event.offsetY);
+            };
+        });
+        document.addEventListener('mousemove', function (event) {
+            var inputX = event.offsetX;
+            var inputY = event.offsetY;
+            var deg = (Math.atan2(inputY - width / 2, inputX - width / 2) / Math.PI * 180);
+            var x = (width / 2.8) * Math.cos(deg * Math.PI / 180);
+            var y = (width / 2.8) * Math.sin(deg * Math.PI / 180);
+
+            if (Math.sqrt((inputX - width / 2) ** 2 + (inputY - width / 2) ** 2) > width / 2.8) {
+                isDrawing && drawMove(x + width / 2, y + width / 2);
+            } else {
+                isDrawing && drawMove(event.offsetX, event.offsetY);
+            };
+            
+        });
+
+        document.addEventListener('mouseup', function (event) {
+            isDrawing = false;
+            drawBack(width);
+        });
     });
 
-    function fn_joiStick() {
+    function fn_joyStick(width) {
         var joyStickCanvas = document.querySelector(".joyStickCanvas");
         var ctx = joyStickCanvas.getContext('2d');
-
         joyStickCanvas.width = width;
         joyStickCanvas.height = width;
+        drawBack(width);
     };
-</script>
 
-<body>
-    <canvas class="joyStickCanvas"></canvas>
-</body>
+    function drawBack() {
+        var joyStickCanvas = document.querySelector(".joyStickCanvas");
+        var ctx = joyStickCanvas.getContext('2d');
+        ctx.clearRect(0, 0, width, width);
+        Object.assign(ctx, {
+            font: `italic bold ${width / 5}px "Georgia", serif`,
+            textAlign: "center",
+            fillStyle: '#000',
+            textBaseline: "middle",
+            shadowColor: "rgba(0, 0, 0, 0.6)",
+            shadowBlur: 1 / 60 * width,
+            shadowOffsetX: 1 / 100 * width,
+            shadowOffsetY: 1 / 100 * width,
+        });
+
+        var gradient = ctx.createRadialGradient(width / 2.1, width / 2.1, width / 20, width / 2, width / 2, width / 10);
+        gradient.addColorStop(0, "#666");
+        gradient.addColorStop(1, "#333");
+
+        ctx.beginPath();
+        ctx.arc(width / 2, width / 2, width / 2.4, 0, Math.PI * 2);
+        ctx.fillStyle = '#444';
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(width / 2, width / 2, width / 10, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
+        ctx.fill();
+    };
+
+    function drawMove(x, y) {
+        var joyStickCanvas = document.querySelector(".joyStickCanvas");
+        var ctx = joyStickCanvas.getContext('2d');
+        ctx.clearRect(0, 0, width, width);
+        Object.assign(ctx, {
+            font: `italic bold ${width / 5}px "Georgia", serif`,
+            textAlign: "center",
+            fillStyle: '#000',
+            textBaseline: "middle",
+            shadowColor: "rgba(0, 0, 0, 0.6)",
+            shadowBlur: 1 / 60 * width,
+            shadowOffsetX: 1 / 100 * width,
+            shadowOffsetY: 1 / 100 * width,
+        });
+
+        var gradient = ctx.createRadialGradient(x / 1.05, y / 1.05, width / 20, x, y, width / 10);
+        gradient.addColorStop(0, "#666");
+        gradient.addColorStop(1, "#333");
+
+        ctx.beginPath();
+        ctx.arc(width / 2, width / 2, width / 2.4, 0, Math.PI * 2);
+        ctx.fillStyle = '#333';
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(x, y, width / 10, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
+        ctx.fill();
+    };
+</script >
+
+<body >
+    <canvas class="joyStickCanvas" > </canvas >
+</body >
