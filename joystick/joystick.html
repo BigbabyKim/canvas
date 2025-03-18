@@ -18,7 +18,7 @@
         fn_joyStick(width); // 길이 설정
 
         document.addEventListener('mousedown', function (event) {
-            drawJoyStirck(event)
+            drawJoyStirck(event);
 
             document.addEventListener('mousemove', drawJoyStirck);
         });
@@ -94,25 +94,31 @@
         var inputX = event.offsetX;
         var inputY = event.offsetY;
         var deg = (Math.atan2(inputY - width / 2, inputX - width / 2) / Math.PI * 180);
-        var resultX = (width / 2.8) * Math.cos(deg * Math.PI / 180) + width / 2;
-        var resultY = (width / 2.8) * Math.sin(deg * Math.PI / 180) + width / 2;
+        var resultX = (width / 2.8) * Math.cos(deg * Math.PI / 180);
+        var resultY = (width / 2.8) * Math.sin(deg * Math.PI / 180);
 
         var i = 0;
 
-        function move() {
+        function move(moveX, moveY) {
             var num = i < 8 ? i / 6 : (i === 8 ? 6 / 7 : 1);
 
-            var x = resultX + (width / 2 - resultX) * num;
-            var y = resultY + (width / 2 - resultY) * num;
+            var x = moveX + (width / 2 - moveX) * num;
+            var y = moveY + (width / 2 - moveY) * num;
 
             drawBack(width);
             drawStick(x, y);
 
-            i++ <= 9 && requestAnimationFrame(move);
+            i++ <= 9 && requestAnimationFrame(function () {
+                move(moveX, moveY);
+            });
         };
 
-        move();
-    }
+        if (Math.sqrt((inputX - width / 2) ** 2 + (inputY - width / 2) ** 2) > width / 2.8) {
+            move(resultX + width / 2, resultY + width / 2);
+        } else {
+            move(inputX, inputY);
+        };
+    };
 </script >
 
 <body >
