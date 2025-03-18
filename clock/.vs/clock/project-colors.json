@@ -1,0 +1,16 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "ff81bfe5-4b55-40e9-9252-c6fb1b7f7322": {
+      "ProjectGuid": "ff81bfe5-4b55-40e9-9252-c6fb1b7f7322",
+      "DisplayName": "솔루션 항목",
+      "ColorIndex": 0
+    },
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "기타 파일",
+      "ColorIndex": -1
+    }
+  },
+  "NextColorIndex": 1
+}
