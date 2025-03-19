@@ -17,15 +17,25 @@
 
         fn_joyStick(width); // 길이 설정
 
-        document.addEventListener('mousedown', function (event) {
-            drawJoyStirck(event);
+        function evnetMouse(event) {
+            drawJoyStirck(event.offsetX, event.offsetY);
+        };
 
-            document.addEventListener('mousemove', drawJoyStirck);
+        document.addEventListener('mousedown', function (event) {
+            var inputX = event.offsetX;
+            var inputY = event.offsetY;
+
+            drawJoyStirck(inputX, inputY);
+
+            document.addEventListener('mousemove', evnetMouse);
         });
 
         document.addEventListener('mouseup', function (event) {
-            document.removeEventListener('mousemove', drawJoyStirck);
-            drawReturn(event);
+            var inputX = event.offsetX;
+            var inputY = event.offsetY;
+
+            document.removeEventListener('mousemove', evnetMouse);
+            drawReturn(inputX, inputY);
         });
     });
 
@@ -74,9 +84,7 @@
         ctx.fill();
     };
 
-    function drawJoyStirck(event) {
-        var inputX = event.offsetX;
-        var inputY = event.offsetY;
+    function drawJoyStirck(inputX, inputY) {
         var deg = (Math.atan2(inputY - width / 2, inputX - width / 2) / Math.PI * 180);
         var x = (width / 2.8) * Math.cos(deg * Math.PI / 180);
         var y = (width / 2.8) * Math.sin(deg * Math.PI / 180);
@@ -90,9 +98,7 @@
         };
     };
 
-    function drawReturn(event) {
-        var inputX = event.offsetX;
-        var inputY = event.offsetY;
+    function drawReturn(inputX, inputY) {
         var deg = (Math.atan2(inputY - width / 2, inputX - width / 2) / Math.PI * 180);
         var resultX = (width / 2.8) * Math.cos(deg * Math.PI / 180);
         var resultY = (width / 2.8) * Math.sin(deg * Math.PI / 180);
@@ -100,7 +106,7 @@
         var i = 0;
 
         function move(moveX, moveY) {
-            var num = i < 8 ? i / 6 : (i === 8 ? 6 / 7 : 1);
+            var num = (i < 8) ? (i / 6) : ((i == 8) ? (6 / 7) : 1);
 
             var x = moveX + (width / 2 - moveX) * num;
             var y = moveY + (width / 2 - moveY) * num;
