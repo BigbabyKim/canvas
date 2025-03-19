@@ -21,6 +21,10 @@
     var circleMoveX = width / 2;
     var circleMoveY = width / 2;
     var click;
+    var targetX = width / 2;
+    var targetY = width / 2;
+    var isMove = false;
+
 
     document.addEventListener('DOMContentLoaded', function () {
         joyStickCanvas = document.querySelector(".joyStickCanvas");
@@ -32,17 +36,21 @@
         fn_moveCircle(width);
 
         function eventMouse(event) {
+            click = true;
+            targetX = event.offsetX;
+            targetY = event.offsetY;
+
             drawJoyStirck(event.offsetX, event.offsetY);
-            drawMove(event.offsetX, event.offsetY);
+            drawMove();
         };
 
         document.addEventListener('mousedown', function (event) {
             click = true;
-            var inputX = event.offsetX;
-            var inputY = event.offsetY;
+            targetX = event.offsetX;
+            targetY = event.offsetY;
 
-            drawJoyStirck(inputX, inputY);
-            drawMove(inputX, inputY);
+            drawJoyStirck(event.offsetX, event.offsetY);
+            drawMove();
 
             document.addEventListener('mousemove', eventMouse);
         });
@@ -189,20 +197,26 @@
         ctx1.fill();
     };
 
-    function drawMove(inputX, inputY) {
+    function drawMove() {
+        if (isMove) return;
+
         function move() {
-            var deg = (Math.atan2(inputY - width / 2, inputX - width / 2) / Math.PI * 180);
-            console.log(click)
-            circleMoveX += Math.cos(deg * Math.PI / 180) / 100;
-            circleMoveY += Math.sin(deg * Math.PI / 180) / 100;
+            isMove = true;
+
+            if (!click) {
+                isMove = false;
+                return;
+            }
+            var deg = (Math.atan2(targetY - width / 2, targetX - width / 2) / Math.PI * 180);
+
+            circleMoveX += Math.cos(deg * Math.PI / 180);
+            circleMoveY += Math.sin(deg * Math.PI / 180);
             
             drawBack1(width);
             drawStick1(circleMoveX, circleMoveY);
 
-            click && requestAnimationFrame(function () {
-                move();
-            });
-        }
+            requestAnimationFrame(move);
+        };
 
         move();
     };
