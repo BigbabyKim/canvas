@@ -1,16 +1,16 @@
 ﻿<style>
-    .cavnasTag{
+    .cavnasTag {
         display: flex;
         width: 100%;
         justify-content: space-between;
     }
 
     .joyStickCanvas:hover {
-        cursor: pointer; 
+        cursor: pointer;
     }
 </style>
 
-<script >
+<script>
     var width = 300;
     var x = width / 2;
     var y = width / 2;
@@ -20,28 +20,37 @@
     var ctx1;
     var circleMoveX = width / 2;
     var circleMoveY = width / 2;
+    var click;
     var targetX = width / 2;
     var targetY = width / 2;
+    var isMove = false;
 
 
     document.addEventListener('DOMContentLoaded', function () {
         joyStickCanvas = document.querySelector(".joyStickCanvas");
+        moveCircleCanvas = document.querySelector(".moveCircleCanvas");
         ctx = joyStickCanvas.getContext('2d');
+        ctx1 = moveCircleCanvas.getContext('2d');
 
         fn_joyStick(width); // 길이 설정
+        fn_moveCircle(width);
 
         function eventMouse(event) {
+            click = true;
             targetX = event.offsetX;
             targetY = event.offsetY;
 
             drawJoyStirck(event.offsetX, event.offsetY);
+            drawMove();
         };
 
         document.addEventListener('mousedown', function (event) {
+            click = true;
             targetX = event.offsetX;
             targetY = event.offsetY;
 
             drawJoyStirck(event.offsetX, event.offsetY);
+            drawMove();
 
             document.addEventListener('mousemove', eventMouse);
         });
@@ -52,6 +61,14 @@
 
             document.removeEventListener('mousemove', eventMouse);
             drawReturn(inputX, inputY);
+            click = false;
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "d" || event.key === "D") {
+                drawBack(width);
+                drawShotting();
+            };
         });
     });
 
@@ -141,10 +158,93 @@
             move(inputX, inputY);
         };
     };
-</script >
+
+    // 움직이는 공 만들기
+    function fn_moveCircle(width) {
+        moveCircleCanvas.width = width;
+        moveCircleCanvas.height = width;
+
+        drawBack1(width);
+        drawStick1(width / 2, width / 2);
+    };
+
+    function drawBack1(width) {
+        ctx1.clearRect(0, 0, width, width);
+
+        Object.assign(ctx1, {
+            shadowBlur: 0,
+            shadowOffsetX: 0,
+            shadowOffsetY: 0,
+        });
+
+        ctx1.beginPath();
+        ctx1.arc(width / 2, width / 2, width, 0, width);
+        ctx1.fillStyle = '#87CEFA';
+        ctx1.fill();
+    };
+
+    function drawStick1(x, y) {
+        var gradient = ctx1.createRadialGradient(x / 1.02, y / 1.02, width / 30, x, y, width / 15);
+        gradient.addColorStop(0, "#666");
+        gradient.addColorStop(1, "#333");
+        ctx1.beginPath();
+        ctx1.arc(x, y, width / 15, 0, Math.PI * 2);
+        ctx1.fillStyle = gradient;
+        ctx1.fill();
+    };
+
+    function drawMove() {
+        if (isMove) return;
+
+        function move() {
+            isMove = true;
+
+            if (!click) {
+                isMove = false;
+                return;
+            }
+            var deg = (Math.atan2(targetY - width / 2, targetX - width / 2) / Math.PI * 180);
+
+            circleMoveX = circleMoveX > width * 29 / 30 ? width * 29 / 30 : circleMoveX < width / 30 ? width / 30 : circleMoveX += Math.cos(deg * Math.PI / 180);
+            circleMoveY = circleMoveY > width * 29 / 30 ? width * 29 / 30 : circleMoveY < width / 30 ? width / 30 : circleMoveY += Math.sin(deg * Math.PI / 180);
+
+            drawBack1(width);
+            drawStick1(circleMoveX, circleMoveY);
+            
+            requestAnimationFrame(move);
+        };
+
+        move();
+    };
+
+    function drawShotting() {
+        var i = 0;
+        var x = circleMoveX;
+        var y = circleMoveY;
+        function shot() {
+            drawShot(x, y + i);
+
+            i -= width / 100;
+            i >= - (width) && requestAnimationFrame(shot);
+
+        };
+
+        shot();
+    };
+
+    function drawShot(x, y) {
+        ctx1.beginPath();
+        ctx1.moveTo(x, y); // 시작점
+        ctx1.lineTo(x, y - width / 15); // 끝점
+        ctx1.strokeStyle = "red"; 
+        ctx1.lineWidth = 2;
+        ctx1.stroke();
+    };
+</script>
 
 <body>
     <div class="cavnasTag">
         <canvas class="joyStickCanvas"></canvas>
+        <canvas class="moveCircleCanvas"></canvas>
     </div>
 </body>
