@@ -222,8 +222,14 @@
         var x = circleMoveX;
         var y = circleMoveY;
         function shot() {
-            drawShot(x, y + i);
-
+            if (click) {
+                drawShot(x, y + i);
+            } else {
+                drawBack1(width); 
+                drawShot(x, y + i);
+                drawStick1(circleMoveX, circleMoveY);
+            };
+            
             i -= width / 100;
             i >= - (width) && requestAnimationFrame(shot);
 
